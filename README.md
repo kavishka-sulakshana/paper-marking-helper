@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Paper Marking Helper
+
+This app helps you to easy the work of uploading, deviding online PDF papers and giving marks.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
