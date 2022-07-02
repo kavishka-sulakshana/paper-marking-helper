@@ -11,7 +11,7 @@ const Navbar = () => {
               <a><div className='px-2 py-3 mx-2 hover:text-red-300 cursor-pointer'>Upload Paper</div></a> */}
             </div>
             <div className="flex">
-              <a><div className='px-2 py-3 mx-2 hover:text-orange-300 cursor-pointer'>Login</div></a>
+            <Link to='/login'><div className='px-2 py-3 mx-2 hover:text-orange-300 cursor-pointer'>Login</div></Link>
               {/* <a><div className='px-2 py-3 mx-2 hover:text-red-300 cursor-pointer'>Register</div></a> */}
             </div>
         </div>
