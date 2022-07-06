@@ -1,12 +1,15 @@
 import { query, doc, collection, where, limit, getDocs, getDoc } from 'firebase/firestore';
-import { Database } from '../../firebase/findex';
+import { Database, storage } from '../../firebase/findex';
 import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { getDownloadURL, ref } from 'firebase/storage';
 
-const MarksSearch = ({result, barcode, setResult, setBarcode}) => {
+const MarksSearch = ({result, barcode, setResult, setBarcode, setDownUrl}) => {
   const colRef = collection(Database, "students" )
-  const [q, setQ] = useState() 
+  const [q, setQ] = useState()
+  
+  const markedRef = ref(storage,'Not_Marked');
 
   useEffect(()=>{
     setQ(q => query(colRef, where("barcode", "==", barcode), limit(1)))
@@ -15,12 +18,16 @@ const MarksSearch = ({result, barcode, setResult, setBarcode}) => {
 
   const findMarks = async(e) => {
     e.preventDefault();
+    setDownUrl('');
     console.log(barcode)
     if(q){
       const snap = await getDocs(q)
       snap.forEach(async(doc) => {
         await setResult(result => doc.data())
       });
+      getDownloadURL(ref(markedRef, `${barcode}.pdf`))
+      .then(url=>setDownUrl(url))
+      .catch(err=>setDownUrl('error'))
     }
   }
 
