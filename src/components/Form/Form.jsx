@@ -10,6 +10,7 @@ const Form = () => {
     const [code, setCode] = useState(0);
     const [name, setName] = useState('');
     const [school, setSchool] = useState('');
+    const [clz, setClz] = useState('none')
     const [pdf, setPdf] = useState();
     const [err, setErr] = useState({
         errName : "",
@@ -21,13 +22,14 @@ const Form = () => {
 
     const submitForm = async (e) => {
         e.preventDefault();
-        if (code != 0 && name != '' && school != '' && pdf !== null && barProgress === 100) {
+        if (code != 0 && name != '' && school != '' && pdf !== null && barProgress === 100 && clz !== 'none') {
             try {
                 console.log(pdf);
                 const docRef = await addDoc(collection(Database, "students"), {
                     barcode: code ,
                     name: `${name}`,
-                    school: `${school}`
+                    school: `${school}`,
+                    class : `${clz}` 
                 });
                 // const uploadTask =await uploadBytesResumable(pdfRef, pdf);
 
@@ -49,7 +51,7 @@ const Form = () => {
 
     const uploadPfd = (e) => {
         e.preventDefault();
-        if (code != 0 && name != '' && school != '' && pdf !== null) {
+        if (code != 0 && name != '' && school != '' && pdf !== null && clz !== 'none') {
             const pdfRef = ref(notMarkedRef, `${code}.pdf`)
             uploadBytesResumable(pdfRef, pdf).on('state_changed',
                 (snapshot) => {
@@ -74,9 +76,12 @@ const Form = () => {
         setCode(0)
         setName("")
         setPdf(null)
+        setClz('none')
         setSchool("")
         setBarProgress(0)
     }
+
+
 
     return (
         <div className='bg-stone-400 py-8'>
@@ -108,6 +113,16 @@ const Form = () => {
                             type="text"
                             placeholder="Enter your school" />
                     </div>
+                    <div className='flex flex-row mt-5 items-center'>
+                        <label className='px-1'>Class : </label>
+                        <select className='px-6 py-1 rounded mx-2 border-black border'
+                                onChange={e => setClz(e.target.value)}>
+                            {(clz==='none') && <option value="none" className='text-gray-400'>Your class</option>}
+                            <option value="2024">2024 A/L</option>
+                            <option value="2023">2023 A/L</option>
+                            <option value="2022">2022 A/L</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
                     <div className='flex flex-col my-4'>
@@ -116,7 +131,8 @@ const Form = () => {
                             <input onChange={e => setPdf(e.target.files[0])} className='py-1 px-2 border-gray-300 border-2 rounded' type="file" />
                             {(barProgress === 0 || barProgress === 100) && <button onClick={uploadPfd} className='active:scale-75 hover:bg-blue-900 text-sm bg-blue-700 px-1 py-1  text-white rounded'>Upload</button>}
                         </div>
-                        <progress className='mx-auto mt-4' max="100" value={barProgress} ></progress></div>
+                        <progress className='mx-auto mt-4' max="100" value={barProgress} ></progress>
+                    </div>
                 </div>
                 <div className='flex justify-around px-4 py-8'>
                     <button onClick={submitForm} 
